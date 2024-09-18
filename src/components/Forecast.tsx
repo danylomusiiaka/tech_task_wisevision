@@ -7,18 +7,18 @@ import { ForecastProps } from "@/interfaces/props";
 import { MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { useFavCities } from "@/contexts/FavCitiesContext";
 
-const getUniqueDates = (list) => {
-  const dates = list.map((item) => new Date(item.dt_txt).toLocaleDateString());
-  return [...new Set(dates)];
+const getUniqueDates = (list: any[]) => {
+  const dates = list.map((item: { dt_txt: string | number | Date; }) => new Date(item.dt_txt).toLocaleDateString());
+  return Array.from(new Set(dates));
 };
 
-const findIndexRangeForDate = (list, date) => {
-  const startIndex = list.findIndex((item) => new Date(item.dt_txt).toLocaleDateString() === date);
+const findIndexRangeForDate = (list: any[], date: string) => {
+  const startIndex = list.findIndex((item: { dt_txt: string | number | Date; }) => new Date(item.dt_txt).toLocaleDateString() === date);
   if (startIndex === -1) return [-1, -1];
 
   const endIndex = list
     .slice(startIndex)
-    .findIndex((item) => new Date(item.dt_txt).toLocaleDateString() !== date);
+    .findIndex((item: { dt_txt: string | number | Date; }) => new Date(item.dt_txt).toLocaleDateString() !== date);
   return [startIndex, endIndex === -1 ? list.length - 1 : startIndex + endIndex - 1];
 };
 
@@ -26,7 +26,7 @@ export default function Forecast({ result }: ForecastProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [selectedDate, setSelectedDate] = useState("");
-  const [uniqueDates, setUniqueDates] = useState([]);
+  const [uniqueDates, setUniqueDates] = useState<string[]>([]);
   const [filteredResults, setFilteredResults] = useState(result.list);
 
   const router = useRouter();

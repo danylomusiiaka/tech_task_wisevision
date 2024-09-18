@@ -13,7 +13,6 @@ export default function Home() {
     event.preventDefault();
     if (city) {
       router.push(`/${city}`);
-      setCity("");
     }
   };
 
