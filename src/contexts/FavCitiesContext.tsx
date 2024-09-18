@@ -11,12 +11,17 @@ const FavCitiesContext = createContext<FavCitiesContextProps | undefined>(undefi
 
 export const FavCitiesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [favCities, setFavCities] = useState<string[]>(() => {
-    const storedCities = localStorage.getItem("favCities");
-    return storedCities ? JSON.parse(storedCities) : [];
+    if (typeof window !== "undefined") {
+      const storedCities = localStorage.getItem("favCities");
+      return storedCities ? JSON.parse(storedCities) : [];
+    }
+    return [];
   });
 
   useEffect(() => {
-    localStorage.setItem("favCities", JSON.stringify(favCities));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("favCities", JSON.stringify(favCities));
+    }
   }, [favCities]);
 
   const addCity = (city: string) => {
@@ -32,9 +37,7 @@ export const FavCitiesProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   return (
-    <FavCitiesContext.Provider value={{ favCities, addCity }}>
-      {children}
-    </FavCitiesContext.Provider>
+    <FavCitiesContext.Provider value={{ favCities, addCity }}>{children}</FavCitiesContext.Provider>
   );
 };
 
